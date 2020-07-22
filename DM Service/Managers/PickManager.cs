@@ -7,9 +7,9 @@ using System.Text;
 
 namespace DM_Service
 {
-    public class SpravcePiku:INotifyPropertyChanged
+    public class PickManager:INotifyPropertyChanged
     {
-        public SpravcePiku()
+        public PickManager()
         {
             Picks = new List<Pick>();
             TotalCount = 0;
@@ -33,7 +33,7 @@ namespace DM_Service
             }
         }
 
-        public int PaletCount
+        public int PalletCount
         {
             get
             {
@@ -44,7 +44,7 @@ namespace DM_Service
         public void AddPick(Pick pick)
         {
             Picks.Add(pick);
-            Service.MainList.Add(new Polozka(pick));
+            Service.AddItem(new Item(pick));
             TotalCount+=pick.CountPicksInList;
         }
 
@@ -53,12 +53,11 @@ namespace DM_Service
             if (Picks.Contains(pick))
             {
                 Picks.Remove(pick);
-                Service.MainList.Remove(new Polozka(pick));
+                Service.Remove(new Item(pick));
             }
-
             else
             {
-                throw new ArgumentNullException("pick neexistuje");
+                throw new ArgumentNullException("pick does not exist");
             }
         }
 
@@ -66,13 +65,12 @@ namespace DM_Service
         {
             if (Picks.Contains(OldPick))
             {
-                Picks[Picks.IndexOf(OldPick)] = NewPick;
-                Service.MainList[Service.MainList.IndexOf(new Polozka(OldPick))] = new Polozka(NewPick);
+                Service.Edit(new Item(OldPick), new Item(NewPick));                 
             }
 
             else
             {
-                throw new ArgumentNullException("pick neexistuje");
+                throw new ArgumentNullException("pick does not exist");
             }
         }
 

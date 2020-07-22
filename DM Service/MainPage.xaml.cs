@@ -20,7 +20,7 @@ namespace DM_Service
             InitializeComponent();
             service = new Service();
             BindingContext = service;
-            zacatekPauzy = DateTime.FromBinary(0);
+            pauseStart = DateTime.FromBinary(0);
             List_listView.ItemsSource = Service.MainList;
             refresh();
         }
@@ -29,9 +29,9 @@ namespace DM_Service
         {
             if (!string.IsNullOrEmpty(Input_Entry.Text))
             {
-                service.SpravcePiku.AddPick(new Pick (int.Parse(Input_Entry.Text)));
+                service.PickManager.AddPick(new Pick (int.Parse(Input_Entry.Text)));
                 Input_Entry.Text = "";
-                Progress_ProgressBar.Progress = ((double)service.SpravcePiku.TotalCount / (double)service.Norma);
+                Progress_ProgressBar.Progress = ((double)service.PickManager.TotalCount / (double)service.Norm);
             }
             refresh();
         }
@@ -44,24 +44,56 @@ namespace DM_Service
         private void refresh()
         {
             PicksCount_Label.TextColor = service.Refresh();
-            Should_ProgressBar.Progress = ((double)service.ShouldHavePicks / (double)service.Norma);
+            Should_ProgressBar.Progress = ((double)service.ShouldHavePicks / (double)service.Norm);
+            //if (Service.MainList.Count > 0)
+            //{
+            //    foreach (Item item in Service.MainList[0])
+            //    {
+            //        System.Diagnostics.Trace.WriteLine(item.Name);
+            //    }
+            //    System.Diagnostics.Trace.WriteLine("***************");
+            //}
+
+            if(service.ShiftName=="Free day")
+            {
+                Add_Butoon.IsEnabled = false;
+                AddPause_Butoon.IsEnabled = false;
+            }
+
+            else
+            {
+                Add_Butoon.IsEnabled = true;
+                AddPause_Butoon.IsEnabled = true;
+            }
+
         }
 
-        public DateTime zacatekPauzy { get; private set; }
+        private DateTime pauseStart;
+        public string PauseStart
+        {
+            get
+            {
+                return pauseStart.ToShortTimeString();
+            }
+        }
         private void Pause_Button_Clicked(object sender, EventArgs e)
         {
-            if(zacatekPauzy == DateTime.FromBinary(0))
+            if(pauseStart == DateTime.FromBinary(0))
             {
-                zacatekPauzy = DateTime.Now;
+                pauseStart = DateTime.Now;
                 Add_Butoon.IsEnabled = false;
                 Input_Entry.IsVisible = false;
+                PauseStart_Label.IsVisible = true;
+                AddPause_Butoon.Text = "Stop Pause";
             }
             else
             {
-                service.SpravcePauz.AddBreak(new Paus(zacatekPauzy, DateTime.Now));
-                zacatekPauzy = DateTime.FromBinary(0);
+                service.PauseManager.AddPause(new Pause(pauseStart, DateTime.Now));
+                pauseStart = DateTime.FromBinary(0);
                 Add_Butoon.IsEnabled = true;
+                PauseStart_Label.IsVisible = false;
                 Input_Entry.IsVisible = true;
+                AddPause_Butoon.Text = "Add Pause";
             }
             refresh();
         }

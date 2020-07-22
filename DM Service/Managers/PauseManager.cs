@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DM_Service
 {
-    public class SpravcePauz:INotifyPropertyChanged
+    public class PauseManager:INotifyPropertyChanged
     {
         private TimeSpan duration;
         public TimeSpan Duration
@@ -23,56 +23,54 @@ namespace DM_Service
             }
         }
 
-        public SpravcePauz()
+        public PauseManager()
         {
-            Paus = new List<Paus>();
-            Duration = TimeSpan.FromTicks(0);
+            Pauses = new List<Pause>();
+            Duration = TimeSpan.Zero;
         }
 
-        private List<Paus> Paus;
+        private List<Pause> Pauses;
 
-        public int PauzyCount
+        public int PausesCount
         {
             get
             {
-                return Paus.Count;
+                return Pauses.Count;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void AddBreak(Paus pauza)
+        public void AddPause(Pause pause)
         {
-            Paus.Add(pauza);
-            Service.MainList.Add(new Polozka(pauza));
-            Duration += pauza.PauzaDuration;
+            Pauses.Add(pause);
+            Service.AddItem(new Item(pause));
+            Duration += pause.PauseDuration;
         }
 
-        public void RemovePaus(Paus pauza)
+        public void RemovePause(Pause pause)
         {
-            if (Paus.Contains(pauza))
+            if (Pauses.Contains(pause))
             {
-                Paus.Remove(pauza);
-                Service.MainList.Remove(new Polozka(pauza));
+                Pauses.Remove(pause);
+                Service.Remove(new Item(pause));
+            }
+            else
+            {
+                throw new ArgumentNullException("pause does not exist");
+            }
+        }
+
+        public void EditPause(Pause OldPause, Pause NewPaus)
+        {
+            if (Pauses.Contains(OldPause))
+            {
+                Service.Edit(new Item(OldPause), new Item(NewPaus));
             }
 
             else
             {
-                throw new ArgumentNullException("pauza neexistuje");
-            }
-        }
-
-        public void EditPic(Paus OldPause, Paus NewPaus)
-        {
-            if (Paus.Contains(OldPause))
-            {
-                Paus[Paus.IndexOf(OldPause)] = NewPaus;
-                Service.MainList[Service.MainList.IndexOf(new Polozka(OldPause))] = new Polozka(NewPaus);
-            }
-
-            else
-            {
-                throw new ArgumentNullException("pauza neexistuje");
+                throw new ArgumentNullException("pause does not exist");
             }
         }
 

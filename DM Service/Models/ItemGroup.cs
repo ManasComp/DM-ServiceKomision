@@ -6,25 +6,25 @@ using System.Text;
 
 namespace DM_Service.Models
 {
-    public class PolozkaGroup : ObservableCollection<Polozka>, INotifyPropertyChanged
+    public class ItemGroup : ObservableCollection<Item>, INotifyPropertyChanged
     {
-        public int PikuZaDen
+        public int PiksInDay
         {
             get
             {
-                int piky = 0;
-                foreach (Polozka polozka in this)
+                int piks = 0;
+                foreach (Item item in this)
                 {
-                    if (polozka.Objekt is Pick)
+                    if (item.Original is Pick)
                     {
-                        piky += (polozka.Objekt as Pick).CountPicksInList;
+                        piks += (item.Original as Pick).CountPicksInList;
                     }
                 }
-                return piky;
+                return piks;
             }
         }
 
-        public string Nazev
+        public string Name
         {
             get
             {
@@ -32,18 +32,18 @@ namespace DM_Service.Models
             }
         }
 
-        public void Užpdate()
+        public void UpDate()
         {
-            Changed(nameof(PikuZaDen));
-            Changed(nameof(Nazev));
+            Changed(nameof(PiksInDay));
+            Changed(nameof(Name));
         }
 
         public event PropertyChangedEventHandler PropertyChanged1;
 
-        protected void Changed(string vlastnost)
+        protected void Changed(string property)
         {
             if (PropertyChanged1 != null)
-                PropertyChanged1(this, new PropertyChangedEventArgs(vlastnost));
+                PropertyChanged1(this, new PropertyChangedEventArgs(property));
         }
     }
 }

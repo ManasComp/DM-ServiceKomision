@@ -13,12 +13,12 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <AbsoluteLayout>
-                    <Label HorizontalOptions="Start" VerticalOptions="FillAndExpand" IsVisible="false" Text="{Binding zacatekPauzy}" VerticalTextAlignment="Center" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All"/>
+                    <Label HorizontalOptions="Start" x:Name="PauseStart_Label" VerticalOptions="FillAndExpand" IsVisible="false" Text="{Binding PauseStart}" VerticalTextAlignment="Center"  AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All"/>
                     <Entry Placeholder="Add Picks" HorizontalOptions="Start" VerticalOptions="FillAndExpand" Keyboard="Numeric" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All" x:Name="Input_Entry" FontAttributes="Bold"/>
                 </AbsoluteLayout>
-                <Button Text="AddPick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20"/>
-                <Button Text="Refresh" x:Name="Refresh_Butoon" Clicked="Refresh_Butoon_Clicked"  CornerRadius="20"/>
-                <Button Text="AddPause" x:Name="AddPause_Butoon" Clicked="Pause_Button_Clicked"  CornerRadius="20"/>
+                <Button Text="Add Pick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20"/>
+                <!--<Button Text="Refresh" x:Name="Refresh_Butoon" Clicked="Refresh_Butoon_Clicked"  CornerRadius="20"/>-->
+                <Button Text="Add Pause" x:Name="AddPause_Butoon" Clicked="Pause_Button_Clicked"  CornerRadius="20"/>
             </StackLayout>
             <Grid>
                 <Grid.RowDefinitions>
@@ -34,15 +34,15 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Text="Total Picks:" Grid.Column="0" Grid.Row="0" />
-                <Label Text="{Binding SpravcePiku.TotalCount}" Grid.Column="1" Grid.Row="0" x:Name="PicksCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <Label Text="{Binding PickManager.TotalCount}" Grid.Column="1" Grid.Row="0" x:Name="PicksCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                 <ProgressBar x:Name="Progress_ProgressBar" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" VerticalOptions="Center"/>
 
                 <Label Text="Should Have Picks"  Grid.Column="0" Grid.Row="1"/>
-                <Label Text="{Binding ShouldHavePicks, UpdateSourceEventName=PropertyChanged}" Grid.Column="1" Grid.Row="1" x:Name="ShouldHavePicks_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <Label Text="{Binding ShouldHavePicks}" Grid.Column="1" Grid.Row="1" x:Name="ShouldHavePicks_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
                 <ProgressBar x:Name="Should_ProgressBar" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalOptions="Center"/>
 
                 <Label Text="Total Pallets:"  Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding SpravcePiku.PaletCount}" Grid.Column="1" Grid.Row="2" x:Name="PalleteCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <Label Text="{Binding PickManager.PalletCount}" Grid.Column="1" Grid.Row="2" x:Name="PalleteCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
 
                 <Label Text="TimeRemaining"  Grid.Column="2" Grid.Row="2"/>
                 <Label Grid.Column="3" Grid.Row="2" x:Name="TimeRemaining_Label" VerticalTextAlignment="Center" FontAttributes="Bold">
@@ -56,29 +56,29 @@
                 </Label>
 
                 <Label Text="Pause Count"  Grid.Column="0" Grid.Row="3"/>
-                <Label Text="{Binding SpravcePauz.PauzyCount}" Grid.Column="1" Grid.Row="3" x:Name="Pauya_Start" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <Label Text="{Binding PauseManager.PausesCount}" Grid.Column="1" Grid.Row="3" x:Name="Pauya_Start" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
 
                 <Label Text="Pause Remaining"  Grid.Column="2" Grid.Row="3"/>
                 <Label Grid.Column="3" Grid.Row="3" x:Name="PauseRemaining_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="{Binding SpravcePauz.Duration.Hours}"/>
+                            <Span Text="{Binding PauseManager.Duration.Hours}"/>
                             <Span Text=" : "/>
-                            <Span Text="{Binding SpravcePauz.Duration.Minutes}"/>
+                            <Span Text="{Binding PauseManager.Duration.Minutes}"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
 
             </Grid>
             <ScrollView >
-                <ListView x:Name="List_listView" IsPullToRefreshEnabled="True" ItemsSource = "{Binding MainList}" >
+                <ListView x:Name="List_listView" IsPullToRefreshEnabled="True" ItemsSource = "{Binding MainList}" IsGroupingEnabled="True" GroupDisplayBinding="{Binding Name}" >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding Nazev}"  HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
-                                    <Label Text="{Binding Cas}"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
-                                    <Label Text="{Binding Specifikace}" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Name}"  HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Duration}"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Specification}" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
                                 </StackLayout>
                                 <ViewCell.ContextActions>
                                     <MenuItem Text="Delete" x:Name="Delete_MenuItem" Clicked="Delete_MenuItem_Clicked" IsDestructive="True" CommandParameter="{Binding .}"/>

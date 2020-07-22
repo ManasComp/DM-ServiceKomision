@@ -1,74 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
-using System.Security;
-using System.Text;
-using System.Xml.Schema;
 
 namespace DM_Service.Models
 {
 
     public class Service : INotifyPropertyChanged
     {
-        private string nazevSmeny;
-        public string NazevSmeny
+        private string shiftName;
+        public string ShiftName
         {
             get
             {
-                return nazevSmeny;
+                return shiftName;
             }
             private set
             {
-                nazevSmeny = value;
-                Changed(nameof(NazevSmeny));
+                shiftName = value;
+                Changed(nameof(ShiftName));
             }
         }
 
-        private TimeSpan zacatekSmeny;
-        public TimeSpan ZacatekSmeny
+        private TimeSpan shiftStart;
+        public TimeSpan ShiftStart
         {
             get
             {
-                return zacatekSmeny;
+                return shiftStart;
             }
             private set
             {
-                zacatekSmeny = value;
-                Changed(nameof(zacatekSmeny));
+                shiftStart = value;
+                Changed(nameof(shiftStart));
             }
         }
-        private TimeSpan konecSmeny;
-        public TimeSpan KonecSmeny
+        private TimeSpan shiftEnd;
+        public TimeSpan ShiftEnd
         {
             get
             {
-                return konecSmeny;
+                return shiftEnd;
             }
             private set
             {
-                konecSmeny = value;
-                Changed(nameof(konecSmeny));
+                shiftEnd = value;
+                Changed(nameof(shiftEnd));
             }
         }
-        private TimeSpan smena;
-        public TimeSpan Smena
+        private TimeSpan shiftDuration;
+        public TimeSpan ShiftDuration
         {
             get
             {
-                return smena;
+                return shiftDuration;
             }
             private set
             {
-                smena = value;
+                shiftDuration = value;
                 Changed(nameof(value));
             }
         }
 
-        public static ObservableCollection<PolozkaGroup> Kolekce;
-        private static ObservableCollection<Polozka> mainList;
-        public static ObservableCollection<Polozka> MainList
+        private static ObservableCollection<ItemGroup> mainList;
+        public static ObservableCollection<ItemGroup> MainList
         {
             get
             {
@@ -81,44 +76,64 @@ namespace DM_Service.Models
             }
         }
 
-        private int norma;
-        public int Norma
+        public static void AddItem(Item item)
         {
-            get
+            if (MainList.Count > 0)
             {
-                return norma;
+                if (MainList[MainList.Count - 1][MainList[MainList.Count - 1].Count - 1].Added.Date == DateTime.Today.Date)
+                {
+                    MainList[MainList.Count - 1].Add(item);
+                    MainList[MainList.Count - 1].UpDate();
+                }
             }
-            private set
+
+            else
             {
-                norma = value;
-                Changed(nameof(Norma));
+                ItemGroup itemGroup = new ItemGroup();
+                itemGroup.Add(item);
+                itemGroup.UpDate();
+                MainList.Add(itemGroup);
             }
         }
 
-        private SpravcePauz spravcePauz;
-        public SpravcePauz SpravcePauz
+        private int norm;
+        public int Norm
         {
             get
             {
-                return spravcePauz;
+                return norm;
             }
             private set
             {
-                spravcePauz = value;
-                Changed(nameof(SpravcePauz));
+                norm = value;
+                Changed(nameof(Norm));
             }
         }
-        private SpravcePiku spravcePiku;
-        public SpravcePiku SpravcePiku
+
+        private PauseManager pauseManager;
+        public PauseManager PauseManager
         {
             get
             {
-                return spravcePiku;
+                return pauseManager;
             }
             private set
             {
-                spravcePiku = value;
-                Changed(nameof(SpravcePiku));
+                pauseManager = value;
+                Changed(nameof(PauseManager));
+            }
+        }
+        private PickManager pickManager;
+        public PickManager PickManager
+        {
+            get
+            {
+                return pickManager;
+            }
+            private set
+            {
+                pickManager = value;
+                Changed(nameof(PickManager));
             }
         }
 
@@ -126,7 +141,7 @@ namespace DM_Service.Models
         {
             get
             {
-                return (int)Math.Round(((Norma / (Smena - SpravcePauz.Duration).TotalSeconds) * -(SpravcePauz.Duration + TimeRemaining - Smena).TotalSeconds), 0);
+                return (int)Math.Round(((Norm / (ShiftDuration - PauseManager.Duration).TotalSeconds) * -(PauseManager.Duration + TimeRemaining - ShiftDuration).TotalSeconds), 0);
             }
         }
 
@@ -134,53 +149,83 @@ namespace DM_Service.Models
         {
             get
             {
-                return (Smena - (DateTime.Now.TimeOfDay - ZacatekSmeny));
+                if (shiftStart == TimeSpan.Zero)
+                {
+                    return TimeSpan.Zero;
+                }
+                else
+                {
+                    return (ShiftDuration - (DateTime.Now.TimeOfDay - ShiftStart));
+                }
             }
         }
 
-        private TimeSpan RanniStart;
-        private TimeSpan RanniKonec;
-        private TimeSpan OdpoledniStart;
-        private TimeSpan OdpoledniKonec;
+        private TimeSpan morningStart;
+        private TimeSpan morningEnd;
+        private TimeSpan afternoonStart;
+        private TimeSpan afternoonName;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public static event PropertyChangedEventHandler PropertyChangedStatic;
 
         public Service()
         {
-            RanniStart = TimeSpan.FromHours(5.75);
-            RanniKonec = TimeSpan.FromHours(13.5);
-            OdpoledniStart = TimeSpan.FromHours(14);
-            OdpoledniKonec = TimeSpan.FromHours(21.75);
-            Norma = 630;
-            Cas();
+            morningStart = TimeSpan.FromHours(5.75);
+            morningEnd = TimeSpan.FromHours(13.5);
+            afternoonStart = TimeSpan.FromHours(14);
+            afternoonName = TimeSpan.FromHours(21.75);
+            Norm = 630;
+            ShiftAllocation();
 
-            SpravcePauz = new SpravcePauz();
-            SpravcePiku = new SpravcePiku();
-            MainList = new ObservableCollection<Polozka>();
+            PauseManager = new PauseManager();
+            PickManager = new PickManager();
+            MainList = new ObservableCollection<ItemGroup>();
             Changed(nameof(MainList));
         }
 
-        private void Cas()
+        public static void Edit(Item oldItem, Item newItem)
         {
-            if ((DateTime.Now.TimeOfDay < RanniKonec) && (DateTime.Now.TimeOfDay > RanniStart))
+            if (oldItem.Added.Date == DateTime.Now.Date && newItem.Added.Date == DateTime.Now.Date)
             {
-                ZacatekSmeny = RanniStart;
-                KonecSmeny = RanniKonec;
-                NazevSmeny = "Ranní";
+                MainList[MainList.Count - 1][MainList[MainList.Count - 1].IndexOf(oldItem)] = newItem;
             }
-            else if ((DateTime.Now.TimeOfDay < OdpoledniKonec) && (DateTime.Now.TimeOfDay > OdpoledniStart))
+        }
+
+        public static void Remove(Item item)
+        {
+            if (MainList[MainList.Count - 1].Contains(item))
             {
-                ZacatekSmeny = OdpoledniStart;
-                KonecSmeny = OdpoledniKonec;
-                NazevSmeny = "Odpolední";
+                MainList[MainList.Count - 1].Remove(item);
             }
             else
             {
-                Smena = TimeSpan.FromTicks(0);
-                NazevSmeny = "je volno";
+                throw new ArgumentNullException("item does not exist");
             }
-            Smena = KonecSmeny - ZacatekSmeny;
+        }
+
+        private void ShiftAllocation()
+        {
+            if ((DateTime.Now.TimeOfDay < morningEnd) && (DateTime.Now.TimeOfDay > morningStart))
+            {
+                ShiftStart = morningStart;
+                ShiftEnd = morningEnd;
+                ShiftName = "Morning";
+            }
+            else if ((DateTime.Now.TimeOfDay < afternoonName) && (DateTime.Now.TimeOfDay > afternoonStart))
+            {
+                ShiftStart = afternoonStart;
+                ShiftEnd = afternoonName;
+                ShiftName = "Afternoon";
+            }
+            else
+            {
+                ShiftDuration = TimeSpan.Zero;
+                ShiftStart = TimeSpan.Zero;
+                ShiftEnd = TimeSpan.Zero;
+                norm = 0;
+                ShiftName = "Free day";
+            }
+            ShiftDuration = ShiftEnd - ShiftStart;
 
         }
 
@@ -194,10 +239,12 @@ namespace DM_Service.Models
             if (PropertyChangedStatic != null)
                 PropertyChangedStatic(MainList, new PropertyChangedEventArgs(vlastnost));
         }
+
         public Color Refresh()
         {
+            ShiftAllocation();
             Color color;
-            if (spravcePiku.TotalCount >= ShouldHavePicks)
+            if (pickManager.TotalCount >= ShouldHavePicks)
             {
                 color = Color.Green;
             }
@@ -205,9 +252,8 @@ namespace DM_Service.Models
             {
                 color = Color.Red;
             }
-            Changed(nameof(spravcePauz.PauzyCount));
-            Changed(nameof(spravcePiku.PaletCount));
-            System.Diagnostics.Trace.WriteLine(spravcePiku.PaletCount);
+            Changed(nameof(pauseManager.PausesCount));
+            Changed(nameof(pickManager.PalletCount));
             Changed(nameof(TimeRemaining));
             Changed(nameof(ShouldHavePicks));
             return color;

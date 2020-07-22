@@ -19,7 +19,7 @@ namespace DM_Service.Models
             }
             else
             {
-                throw new ArgumentNullException("0 piků");
+                throw new ArgumentNullException("wrong pick intialize");
             }
         }
     }
