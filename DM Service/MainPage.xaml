@@ -1,0 +1,94 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="DM_Service.MainPage"
+             BackgroundColor="LightBlue">
+    <RefreshView x:Name="Refresh_RefreshView">
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Start" Padding="20">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="DM Service Mobile App" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="Blue" FontAttributes="Bold" FontSize="Large"/>
+                <Image Source="https://www.obchodnidumzlin.cz/images/obchodnidumzlin.cz/uploader/files/loga/DM_logo.png" HeightRequest="50" WidthRequest="50"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <AbsoluteLayout>
+                    <Label HorizontalOptions="Start" VerticalOptions="FillAndExpand" IsVisible="false" Text="{Binding zacatekPauzy}" VerticalTextAlignment="Center" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All"/>
+                    <Entry Placeholder="Add Picks" HorizontalOptions="Start" VerticalOptions="FillAndExpand" Keyboard="Numeric" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All" x:Name="Input_Entry" FontAttributes="Bold"/>
+                </AbsoluteLayout>
+                <Button Text="AddPick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20"/>
+                <Button Text="Refresh" x:Name="Refresh_Butoon" Clicked="Refresh_Butoon_Clicked"  CornerRadius="20"/>
+                <Button Text="AddPause" x:Name="AddPause_Butoon" Clicked="Pause_Button_Clicked"  CornerRadius="20"/>
+            </StackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Total Picks:" Grid.Column="0" Grid.Row="0" />
+                <Label Text="{Binding SpravcePiku.TotalCount}" Grid.Column="1" Grid.Row="0" x:Name="PicksCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <ProgressBar x:Name="Progress_ProgressBar" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" VerticalOptions="Center"/>
+
+                <Label Text="Should Have Picks"  Grid.Column="0" Grid.Row="1"/>
+                <Label Text="{Binding ShouldHavePicks, UpdateSourceEventName=PropertyChanged}" Grid.Column="1" Grid.Row="1" x:Name="ShouldHavePicks_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <ProgressBar x:Name="Should_ProgressBar" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalOptions="Center"/>
+
+                <Label Text="Total Pallets:"  Grid.Column="0" Grid.Row="2"/>
+                <Label Text="{Binding SpravcePiku.PaletCount}" Grid.Column="1" Grid.Row="2" x:Name="PalleteCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+
+                <Label Text="TimeRemaining"  Grid.Column="2" Grid.Row="2"/>
+                <Label Grid.Column="3" Grid.Row="2" x:Name="TimeRemaining_Label" VerticalTextAlignment="Center" FontAttributes="Bold">
+                    <Label.FormattedText VerticalOptions="Center">
+                        <FormattedString>
+                            <Span Text="{Binding TimeRemaining.Hours}"/>
+                            <Span Text=" : "/>
+                            <Span Text="{Binding TimeRemaining.Minutes}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label Text="Pause Count"  Grid.Column="0" Grid.Row="3"/>
+                <Label Text="{Binding SpravcePauz.PauzyCount}" Grid.Column="1" Grid.Row="3" x:Name="Pauya_Start" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+
+                <Label Text="Pause Remaining"  Grid.Column="2" Grid.Row="3"/>
+                <Label Grid.Column="3" Grid.Row="3" x:Name="PauseRemaining_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding SpravcePauz.Duration.Hours}"/>
+                            <Span Text=" : "/>
+                            <Span Text="{Binding SpravcePauz.Duration.Minutes}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+            </Grid>
+            <ScrollView >
+                <ListView x:Name="List_listView" IsPullToRefreshEnabled="True" ItemsSource = "{Binding MainList}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Nazev}"  HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Cas}"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                                    <Label Text="{Binding Specifikace}" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
+                                </StackLayout>
+                                <ViewCell.ContextActions>
+                                    <MenuItem Text="Delete" x:Name="Delete_MenuItem" Clicked="Delete_MenuItem_Clicked" IsDestructive="True" CommandParameter="{Binding .}"/>
+                                    <MenuItem Text="Edit" x:Name="Edit_MenuItem" Clicked="Edit_MenuItem_Clicked" CommandParameter="{Binding .}"/>
+                                </ViewCell.ContextActions>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollView>
+        </StackLayout>
+    </RefreshView>
+</ContentPage>
