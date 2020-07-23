@@ -48,7 +48,7 @@ namespace DM_Service
             }
             refresh();
         }
-
+        //test
         private void refresh()
         {
             PicksCount_Label.TextColor = service.Refresh();
