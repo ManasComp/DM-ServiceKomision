@@ -14,6 +14,18 @@ namespace DM_Service
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
+        private Command _refreshViewCommand;
+        private Command RefreshViewCommand
+        {
+            get
+            {
+                return _refreshViewCommand ?? (_refreshViewCommand = new Command(() =>
+                {
+                    refresh();
+                    Refresh_RefreshView.IsRefreshing = false;
+                }));
+            }
+        }
         Service service;
         public MainPage()
         {
@@ -22,6 +34,7 @@ namespace DM_Service
             BindingContext = service;
             pauseStart = DateTime.FromBinary(0);
             List_listView.ItemsSource = Service.MainList;
+            Refresh_RefreshView.Command = RefreshViewCommand;
             refresh();
         }
 
@@ -29,15 +42,10 @@ namespace DM_Service
         {
             if (!string.IsNullOrEmpty(Input_Entry.Text))
             {
-                service.PickManager.AddPick(new Pick (int.Parse(Input_Entry.Text)));
+                service.PickManager.AddPick(new Pick(int.Parse(Input_Entry.Text)));
                 Input_Entry.Text = "";
                 Progress_ProgressBar.Progress = ((double)service.PickManager.TotalCount / (double)service.Norm);
             }
-            refresh();
-        }
-
-        private void Refresh_Butoon_Clicked(object sender, EventArgs e)
-        {
             refresh();
         }
 
@@ -54,7 +62,7 @@ namespace DM_Service
             //    System.Diagnostics.Trace.WriteLine("***************");
             //}
 
-            if(service.ShiftName=="Free day")
+            if (service.ShiftName == "Free day")
             {
                 Add_Butoon.IsEnabled = false;
                 AddPause_Butoon.IsEnabled = false;
@@ -66,33 +74,29 @@ namespace DM_Service
                 AddPause_Butoon.IsEnabled = true;
             }
 
+            PalleteCount_Label.Text = service.PickManager.PalletCount.ToString();
+            Pauza_Count.Text = service.PauseManager.PausesCount.ToString();
+            PauseLasts_Label.Text = string.Format("{0}:{1}", (DateTime.Now - pauseStart).Minutes, (DateTime.Now - pauseStart).Seconds);
         }
 
         private DateTime pauseStart;
-        public string PauseStart
-        {
-            get
-            {
-                return pauseStart.ToShortTimeString();
-            }
-        }
         private void Pause_Button_Clicked(object sender, EventArgs e)
         {
-            if(pauseStart == DateTime.FromBinary(0))
+            if (pauseStart == DateTime.FromBinary(0))
             {
                 pauseStart = DateTime.Now;
-                Add_Butoon.IsEnabled = false;
-                Input_Entry.IsVisible = false;
-                PauseStart_Label.IsVisible = true;
+                Picks_StackLayout.IsVisible = false;
+                PauseStart_Grid.IsVisible = true;
                 AddPause_Butoon.Text = "Stop Pause";
+                PauseStart_Label.Text = pauseStart.ToShortTimeString();
+                PauseLasts_Label.Text = string.Format("{0}:{1}", (DateTime.Now - pauseStart).Minutes, (DateTime.Now - pauseStart).Seconds);
             }
             else
             {
                 service.PauseManager.AddPause(new Pause(pauseStart, DateTime.Now));
                 pauseStart = DateTime.FromBinary(0);
-                Add_Butoon.IsEnabled = true;
-                PauseStart_Label.IsVisible = false;
-                Input_Entry.IsVisible = true;
+                PauseStart_Grid.IsVisible = false;
+                Picks_StackLayout.IsVisible = true;
                 AddPause_Butoon.Text = "Add Pause";
             }
             refresh();
@@ -106,6 +110,18 @@ namespace DM_Service
         private void Edit_MenuItem_Clicked(object sender, EventArgs e)
         {
 
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged2;
+        protected void Changed(string property)
+        {
+            if (PropertyChanged2 != null)
+                PropertyChanged2(this, new PropertyChangedEventArgs(property));
+        }
+
+        private void List_listView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            List_listView.SelectedItem = null;
         }
     }
 }

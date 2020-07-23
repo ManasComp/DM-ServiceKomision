@@ -11,13 +11,27 @@
                 <Label Text="DM Service Mobile App" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="Blue" FontAttributes="Bold" FontSize="Large"/>
                 <Image Source="https://www.obchodnidumzlin.cz/images/obchodnidumzlin.cz/uploader/files/loga/DM_logo.png" HeightRequest="50" WidthRequest="50"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                 <AbsoluteLayout>
-                    <Label HorizontalOptions="Start" x:Name="PauseStart_Label" VerticalOptions="FillAndExpand" IsVisible="false" Text="{Binding PauseStart}" VerticalTextAlignment="Center"  AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All"/>
-                    <Entry Placeholder="Add Picks" HorizontalOptions="Start" VerticalOptions="FillAndExpand" Keyboard="Numeric" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All" x:Name="Input_Entry" FontAttributes="Bold"/>
+                    <Grid VerticalOptions="FillAndExpand" IsVisible="false" x:Name="PauseStart_Grid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label VerticalTextAlignment="Center" Text="Pause start at" Grid.Column="0" Grid.Row="0"/>
+                        <Label FontAttributes="Bold"  x:Name="PauseStart_Label" VerticalTextAlignment="Center" Grid.Column="1" Grid.Row="0"/>
+                        <Label VerticalTextAlignment="Center" Text="Pause lasts" Grid.Column="0" Grid.Row="1"/>
+                        <Label FontAttributes="Bold"  x:Name="PauseLasts_Label" VerticalTextAlignment="Center" Grid.Column="1" Grid.Row="1"/>
+                    </Grid>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All" x:Name="Picks_StackLayout">
+                        <Entry Placeholder="Add Picks" Keyboard="Numeric" x:Name="Input_Entry" FontAttributes="Bold"/>
+                        <Button Text="Add Pick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20"/>
+                    </StackLayout>
                 </AbsoluteLayout>
-                <Button Text="Add Pick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20"/>
-                <!--<Button Text="Refresh" x:Name="Refresh_Butoon" Clicked="Refresh_Butoon_Clicked"  CornerRadius="20"/>-->
                 <Button Text="Add Pause" x:Name="AddPause_Butoon" Clicked="Pause_Button_Clicked"  CornerRadius="20"/>
             </StackLayout>
             <Grid>
@@ -42,7 +56,7 @@
                 <ProgressBar x:Name="Should_ProgressBar" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalOptions="Center"/>
 
                 <Label Text="Total Pallets:"  Grid.Column="0" Grid.Row="2"/>
-                <Label Text="{Binding PickManager.PalletCount}" Grid.Column="1" Grid.Row="2" x:Name="PalleteCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <Label Grid.Column="1" Grid.Row="2" x:Name="PalleteCount_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
 
                 <Label Text="TimeRemaining"  Grid.Column="2" Grid.Row="2"/>
                 <Label Grid.Column="3" Grid.Row="2" x:Name="TimeRemaining_Label" VerticalTextAlignment="Center" FontAttributes="Bold">
@@ -55,8 +69,8 @@
                     </Label.FormattedText>
                 </Label>
 
-                <Label Text="Pause Count"  Grid.Column="0" Grid.Row="3"/>
-                <Label Text="{Binding PauseManager.PausesCount}" Grid.Column="1" Grid.Row="3" x:Name="Pauya_Start" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
+                <Label Text="Pause Count:"  Grid.Column="0" Grid.Row="3"/>
+                <Label Grid.Column="1" Grid.Row="3" x:Name="Pauza_Count" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center"/>
 
                 <Label Text="Pause Remaining"  Grid.Column="2" Grid.Row="3"/>
                 <Label Grid.Column="3" Grid.Row="3" x:Name="PauseRemaining_Label" FontAttributes="Bold" VerticalTextAlignment="Center" VerticalOptions="Center">
@@ -71,7 +85,7 @@
 
             </Grid>
             <ScrollView >
-                <ListView x:Name="List_listView" IsPullToRefreshEnabled="True" ItemsSource = "{Binding MainList}" IsGroupingEnabled="True" GroupDisplayBinding="{Binding Name}" >
+                <ListView x:Name="List_listView" ItemsSource = "{Binding MainList}" IsGroupingEnabled="True" GroupDisplayBinding="{Binding Name}" ItemSelected="List_listView_ItemSelected">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
