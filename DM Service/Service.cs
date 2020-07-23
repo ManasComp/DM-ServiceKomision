@@ -82,7 +82,7 @@ namespace DM_Service.Models
             {
                 if (MainList[MainList.Count - 1][MainList[MainList.Count - 1].Count - 1].Added.Date == DateTime.Today.Date)
                 {
-                    MainList[MainList.Count - 1].Add(item);
+                    MainList[MainList.Count - 1].Insert(0, item);
                     MainList[MainList.Count - 1].UpDate();
                 }
             }
@@ -90,7 +90,7 @@ namespace DM_Service.Models
             else
             {
                 ItemGroup itemGroup = new ItemGroup();
-                itemGroup.Add(item);
+                itemGroup.Insert(0, item);
                 itemGroup.UpDate();
                 MainList.Add(itemGroup);
             }

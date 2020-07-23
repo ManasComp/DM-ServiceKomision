@@ -19,13 +19,13 @@ namespace DM_Service.Models
             }
         }
 
-        public DateTime StartPause{ get; private set; }
+        public DateTime StartPause { get; private set; }
         public DateTime EndPause { get; private set; }
-        public TimeSpan PauseDuration 
+        public TimeSpan PauseDuration
         {
             get
             {
-                    return EndPause - StartPause;
+                return EndPause - StartPause;
             }
         }
     }

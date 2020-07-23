@@ -14,7 +14,7 @@ namespace DM_Service
         {
             get
             {
-                return duration; 
+                return duration;
             }
             private set
             {

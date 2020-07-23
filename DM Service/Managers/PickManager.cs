@@ -45,7 +45,7 @@ namespace DM_Service
         {
             Picks.Add(pick);
             Service.AddItem(new Item(pick));
-            TotalCount+=pick.CountPicksInList;
+            TotalCount += pick.CountPicksInList;
         }
 
         public void RemovePick(Pick pick)
@@ -65,7 +65,7 @@ namespace DM_Service
         {
             if (Picks.Contains(OldPick))
             {
-                Service.Edit(new Item(OldPick), new Item(NewPick));                 
+                Service.Edit(new Item(OldPick), new Item(NewPick));
             }
 
             else
@@ -79,6 +79,5 @@ namespace DM_Service
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(vlastnost));
         }
-
     }
 }

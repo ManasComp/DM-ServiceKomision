@@ -66,7 +66,7 @@ namespace DM_Service.Models
         public Item(Pick pick)
         {
             Name = "Pick";
-            Duration = pick.PickListSave.ToString("HH:mm");
+            Duration = pick.PickListSave.ToShortTimeString();
             Specification = pick.CountPicksInList.ToString();
             Original = pick as object;
             Added = DateTime.Now;
@@ -75,8 +75,8 @@ namespace DM_Service.Models
         public Item(Pause pause)
         {
             Name = "Pause";
-            Duration = string.Format("{0} - {1}", pause.StartPause.ToString("HH:mm:ss"), pause.EndPause.ToString("HH:mm:ss"));
-            Specification = string.Format("{0}:{1}",pause.PauseDuration.Minutes, pause.PauseDuration.Seconds);
+            Duration = string.Format("{0} - {1}", pause.StartPause.ToLongTimeString(), pause.EndPause.ToLongTimeString());
+            Specification = string.Format("{0}:{1}", pause.PauseDuration.Minutes, pause.PauseDuration.Seconds);
             Original = pause as object;
             Added = DateTime.Now;
         }
