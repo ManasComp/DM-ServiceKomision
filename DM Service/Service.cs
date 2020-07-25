@@ -138,7 +138,16 @@ namespace DM_Service.Models
         {
             get
             {
-                return (int)Math.Round(((Norm / (ShiftDuration - PauseManager.Duration).TotalSeconds) * -(PauseManager.Duration + TimeRemaining - ShiftDuration).TotalSeconds), 0);
+                TimeSpan freeTime;
+                if (PauseManager.PausesCount >= PauseManager.MaximumPauses)
+                {
+                    freeTime = TimeSpan.FromHours(0.5);
+                }
+                else
+                {
+                    freeTime = PauseManager.Duration;
+                }
+                return (int)Math.Round(((Norm / (ShiftDuration - freeTime).TotalSeconds) * -(PauseManager.Duration + TimeRemaining - ShiftDuration).TotalSeconds), 0);
             }
         }
 

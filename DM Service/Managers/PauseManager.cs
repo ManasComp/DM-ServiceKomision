@@ -9,6 +9,7 @@ namespace DM_Service
 {
     public class PauseManager:PropertyChangedClass
     {
+        public int MaximumPauses { get; private set; }
         private TimeSpan duration;
         public TimeSpan Duration
         {
@@ -26,6 +27,7 @@ namespace DM_Service
         public PauseManager()
         {
             Duration = TimeSpan.Zero;
+            MaximumPauses = 2;
             PausesCount =0;
         }
 

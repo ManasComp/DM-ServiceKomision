@@ -65,7 +65,14 @@ namespace DM_Service.Models
 
         public Item(Pick pick)
         {
-            Name = "Pick";
+            if (pick.CountPicksInList > 0)
+            {
+                Name = "Pick";
+            }
+            else
+            {
+                Name = "Last Pick";
+            }
             Duration = pick.PickListSave.ToShortTimeString();
             Specification = pick.CountPicksInList.ToString();
             Original = pick as object;
