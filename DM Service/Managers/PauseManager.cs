@@ -25,17 +25,21 @@ namespace DM_Service
 
         public PauseManager()
         {
-            Pauses = new List<Pause>();
             Duration = TimeSpan.Zero;
+            PausesCount =0;
         }
 
-        private List<Pause> Pauses;
-
+        private int pausesCount;
         public int PausesCount
         {
             get
             {
-                return Pauses.Count;
+                return pausesCount;
+            }
+            set
+            {
+                pausesCount = value;
+                Changed(nameof(PausesCount));
             }
         }
 
@@ -43,27 +47,27 @@ namespace DM_Service
 
         public void AddPause(Pause pause)
         {
-            Pauses.Add(pause);
             Service.AddItem(new Item(pause));
             Duration += pause.PauseDuration;
+            PausesCount += 1;
         }
 
-        public void RemovePause(Pause pause)
-        {
-            if (Pauses.Contains(pause))
-            {
-                Pauses.Remove(pause);
-                Service.Remove(new Item(pause));
-            }
-            else
-            {
-                throw new ArgumentNullException("pause does not exist");
-            }
-        }
+        //public void RemovePause(Pause pause)
+        //{
+        //    if (Service.MainList[Service.MainList.Count - 1].Contains(new Item(pause)))
+        //    {
+        //        Service.Remove(new Item(pause));
+        //        PausesCount -= 1;
+        //    }
+        //    else
+        //    {
+        //        throw new ArgumentNullException("pause does not exist");
+        //    }
+        //}
 
         public void EditPause(Pause OldPause, Pause NewPaus)
         {
-            if (Pauses.Contains(OldPause))
+            if (Service.MainList[Service.MainList.Count - 1].Contains(new Item(OldPause)))
             {
                 Service.Edit(new Item(OldPause), new Item(NewPaus));
             }

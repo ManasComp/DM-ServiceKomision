@@ -11,11 +11,9 @@ namespace DM_Service
     {
         public PickManager()
         {
-            Picks = new List<Pick>();
             TotalCount = 0;
+            PalletCount = 0;
         }
-
-        private List<Pick> Picks;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,37 +31,49 @@ namespace DM_Service
             }
         }
 
+        private int palletCount;
         public int PalletCount
         {
             get
             {
-                return Picks.Count;
+                return palletCount;
+            }
+            set
+            {
+                palletCount = value;
+                Changed(nameof(PalletCount));
             }
         }
 
         public void AddPick(Pick pick)
         {
-            Picks.Add(pick);
             Service.AddItem(new Item(pick));
             TotalCount += pick.CountPicksInList;
-        }
-
-        public void RemovePick(Pick pick)
-        {
-            if (Picks.Contains(pick))
+            if (pick.CountPicksInList > 0)
             {
-                Picks.Remove(pick);
-                Service.Remove(new Item(pick));
+                PalletCount += 1;
             }
             else
             {
-                throw new ArgumentNullException("pick does not exist");
+                
             }
         }
 
+        //public void RemovePick(Pick pick)
+        //{
+        //    if (Service.MainList[Service.MainList.Count - 1].Contains(new Item(pick)))
+        //    {
+        //        Service.Remove(new Item(pick));
+        //    }
+        //    else
+        //    {
+        //        throw new ArgumentNullException("pick does not exist");
+        //    }
+        //}
+
         public void EditPick(Pick OldPick, Pick NewPick)
         {
-            if (Picks.Contains(OldPick))
+            if (Service.MainList[Service.MainList.Count - 1].Contains(new Item(OldPick)))
             {
                 Service.Edit(new Item(OldPick), new Item(NewPick));
             }

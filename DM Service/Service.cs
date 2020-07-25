@@ -78,13 +78,10 @@ namespace DM_Service.Models
 
         public static void AddItem(Item item)
         {
-            if (MainList.Count > 0)
+            if ((MainList.Count > 0) && (MainList[MainList.Count - 1].Count > 0) && (MainList[MainList.Count - 1][MainList[MainList.Count - 1].Count - 1].Added.Date == DateTime.Today.Date))
             {
-                if (MainList[MainList.Count - 1][MainList[MainList.Count - 1].Count - 1].Added.Date == DateTime.Today.Date)
-                {
-                    MainList[MainList.Count - 1].Insert(0, item);
-                    MainList[MainList.Count - 1].UpDate();
-                }
+                MainList[MainList.Count - 1].Insert(0, item);
+                MainList[MainList.Count - 1].UpDate();                   
             }
 
             else
@@ -196,6 +193,10 @@ namespace DM_Service.Models
             if (MainList[MainList.Count - 1].Contains(item))
             {
                 MainList[MainList.Count - 1].Remove(item);
+                if (MainList[MainList.Count - 1].Count == 0)
+                {
+                    MainList.Remove(MainList[MainList.Count - 1]);
+                }
             }
             else
             {

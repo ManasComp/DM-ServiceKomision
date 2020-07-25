@@ -48,7 +48,7 @@ namespace DM_Service
             }
             refresh();
         }
-        //test
+
         private void refresh()
         {
             PicksCount_Label.TextColor = service.Refresh();
@@ -104,7 +104,8 @@ namespace DM_Service
 
         private void Delete_MenuItem_Clicked(object sender, EventArgs e)
         {
-
+            System.Diagnostics.Trace.WriteLine(sender);
+            Service.Remove((sender as MenuItem).CommandParameter as Item);
         }
 
         private void Edit_MenuItem_Clicked(object sender, EventArgs e)
