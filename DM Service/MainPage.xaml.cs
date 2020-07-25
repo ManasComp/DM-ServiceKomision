@@ -32,7 +32,6 @@ namespace DM_Service
             InitializeComponent();
             service = new Service();
             BindingContext = service;
-            pauseStart = DateTime.FromBinary(0);
             List_listView.ItemsSource = Service.MainList;
             Refresh_RefreshView.Command = RefreshViewCommand;
             refresh();
@@ -53,14 +52,10 @@ namespace DM_Service
         {
             PicksCount_Label.TextColor = service.Refresh();
             Should_ProgressBar.Progress = ((double)service.ShouldHavePicks / (double)service.Norm);
-            //if (Service.MainList.Count > 0)
-            //{
-            //    foreach (Item item in Service.MainList[0])
-            //    {
-            //        System.Diagnostics.Trace.WriteLine(item.Name);
-            //    }
-            //    System.Diagnostics.Trace.WriteLine("***************");
-            //}
+            if (service.PauseManager.PausesCount < service.PauseManager.MaximumPauses)
+            {
+                AddPause_Butoon.IsEnabled = true;
+            }
 
             if (service.ShiftName == "Free day")
             {
@@ -76,30 +71,7 @@ namespace DM_Service
 
             PalleteCount_Label.Text = service.PickManager.PalletCount.ToString();
             Pauza_Count.Text = service.PauseManager.PausesCount.ToString();
-            PauseLasts_Label.Text = string.Format("{0}:{1}", (DateTime.Now - pauseStart).Minutes, (DateTime.Now - pauseStart).Seconds);
-        }
-
-        private DateTime pauseStart;
-        private void Pause_Button_Clicked(object sender, EventArgs e)
-        {
-            if (pauseStart == DateTime.FromBinary(0))
-            {
-                pauseStart = DateTime.Now;
-                Picks_StackLayout.IsVisible = false;
-                PauseStart_Grid.IsVisible = true;
-                AddPause_Butoon.Text = "Stop Pause";
-                PauseStart_Label.Text = pauseStart.ToShortTimeString();
-                PauseLasts_Label.Text = string.Format("{0}:{1}", (DateTime.Now - pauseStart).Minutes, (DateTime.Now - pauseStart).Seconds);
-            }
-            else
-            {
-                service.PauseManager.AddPause(new Pause(pauseStart, DateTime.Now));
-                pauseStart = DateTime.FromBinary(0);
-                PauseStart_Grid.IsVisible = false;
-                Picks_StackLayout.IsVisible = true;
-                AddPause_Butoon.Text = "Add Pause";
-            }
-            refresh();
+            PauseLasts_Label.Text = string.Format("{0}:{1}", (DateTime.Now - AddPausePressedStart).Minutes, (DateTime.Now - AddPausePressedStart).Seconds);
         }
 
         private void Delete_MenuItem_Clicked(object sender, EventArgs e)
@@ -123,6 +95,65 @@ namespace DM_Service
         private void List_listView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             List_listView.SelectedItem = null;
+        }
+
+        private DateTime AddPausePressedStart;
+
+        private void AddPause_Butoon_Pressed(object sender, EventArgs e)
+        {
+            if (pressed == true)
+            {
+                AddPausePressedStart = DateTime.Now;
+                System.Diagnostics.Trace.WriteLine("pressed");
+            }       
+        }
+
+        private bool pressed = true;
+        private bool pause = true;
+        private void AddPause_Butoon_Released(object sender, EventArgs e)
+        {
+            if (pressed == true)
+            {
+                Picks_StackLayout.IsVisible = false;
+                PauseStart_Grid.IsVisible = true;
+                if ((AddPausePressedStart + TimeSpan.FromMilliseconds(500)) > DateTime.Now)
+                {
+                    AddPause_Butoon.Text = "Stop Pause";
+                    pause = true;
+                }
+                else
+                {
+                    AddPause_Butoon.Text = "Stop ShutDown";
+                    pause = false;
+                }
+                PauseStart_Label.Text = AddPausePressedStart.ToShortTimeString();
+                PauseLasts_Label.Text = string.Format("{0}:{1}", AddPausePressedStart.Minute, AddPausePressedStart.Second);
+                pressed = false;
+            }
+            else
+            {
+                PauseStart_Grid.IsVisible = false;
+                Picks_StackLayout.IsVisible = true;
+                AddPause_Butoon.Text = "Add Pause";
+                if (pause)
+                {
+                    if (service.PauseManager.PausesCount >= service.PauseManager.MaximumPauses)
+                    {
+                        DisplayAlert("Error", "Too much pauses", "ok");
+                    }
+                    else
+                    {
+                        service.PauseManager.AddPause(new Pause(AddPausePressedStart, DateTime.Now));
+                    }
+                }
+                else
+                {
+                    DisplayAlert("pressed", "pressed", "ok");
+                    Service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));                    
+                }
+                pressed = true;
+            }
+            refresh();
         }
     }
 }

@@ -88,6 +88,15 @@ namespace DM_Service.Models
             Added = DateTime.Now;
         }
 
+        public Item(WorkShutDown workShutDown)
+        {
+            Name = "WorkShutDown";
+            Duration = string.Format("{0} - {1}", workShutDown.StartPause.ToLongTimeString(), workShutDown.EndPause.ToLongTimeString());
+            Specification = string.Format("{0}:{1}", workShutDown.PauseDuration.Minutes, workShutDown.PauseDuration.Seconds);
+            Original = workShutDown as object;
+            Added = DateTime.Now;
+        }
+
         private object original;
         public object Original
         {

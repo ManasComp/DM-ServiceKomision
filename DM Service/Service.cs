@@ -134,6 +134,8 @@ namespace DM_Service.Models
             }
         }
 
+        public TimeSpan MaxPause { get; private set; }
+
         public int ShouldHavePicks
         {
             get
@@ -141,7 +143,7 @@ namespace DM_Service.Models
                 TimeSpan freeTime;
                 if (PauseManager.PausesCount >= PauseManager.MaximumPauses)
                 {
-                    freeTime = TimeSpan.FromHours(0.5);
+                    freeTime = MaxPause;
                 }
                 else
                 {
@@ -179,6 +181,7 @@ namespace DM_Service.Models
             morningEnd = TimeSpan.FromHours(13.5);
             afternoonStart = TimeSpan.FromHours(14);
             afternoonName = TimeSpan.FromHours(21.75);
+            MaxPause = TimeSpan.FromHours(0.5);
             Norm = 630;
             ShiftAllocation();
 

@@ -15,7 +15,7 @@ namespace DM_Service.Models
             }
             else
             {
-                throw new ArgumentNullException("wrong pause initialize");
+                throw new ArgumentNullException("wrong pause or WorkShutDown initialize");
             }
         }
 

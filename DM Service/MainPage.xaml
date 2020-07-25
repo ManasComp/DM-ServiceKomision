@@ -29,10 +29,10 @@
                     </Grid>
                     <StackLayout Orientation="Horizontal" HorizontalOptions="Start" VerticalOptions="FillAndExpand" AbsoluteLayout.LayoutBounds=".5,0.5,1,1" AbsoluteLayout.LayoutFlags="All" x:Name="Picks_StackLayout">
                         <Entry Placeholder="Add Picks" Keyboard="Numeric" x:Name="Input_Entry" FontAttributes="Bold"/>
-                        <Button Text="Add Pick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20"/>
+                        <Button Text="Add Pick" x:Name="Add_Butoon" Clicked="Add_Butoon_Clicked" CornerRadius="20" />
                     </StackLayout>
                 </AbsoluteLayout>
-                <Button Text="Add Pause" x:Name="AddPause_Butoon" Clicked="Pause_Button_Clicked"  CornerRadius="20"/>
+                <Button Text="Add Pause" x:Name="AddPause_Butoon" CornerRadius="20" Pressed="AddPause_Butoon_Pressed" Released="AddPause_Butoon_Released"/>
             </StackLayout>
             <Grid>
                 <Grid.RowDefinitions>
