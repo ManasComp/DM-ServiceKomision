@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DM_Service
 {
-    public class PauseManager:INotifyPropertyChanged
+    public class PauseManager:PropertyChangedClass
     {
         private TimeSpan duration;
         public TimeSpan Duration
@@ -43,8 +43,6 @@ namespace DM_Service
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public void AddPause(Pause pause)
         {
             Service.AddItem(new Item(pause));
@@ -76,12 +74,6 @@ namespace DM_Service
             {
                 throw new ArgumentNullException("pause does not exist");
             }
-        }
-
-        protected void Changed(string vlastnost)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(vlastnost));
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Drawing;
 namespace DM_Service.Models
 {
 
-    public class Service : INotifyPropertyChanged
+    public class Service : PropertyChangedClass
     {
         private string shiftName;
         public string ShiftName
@@ -162,7 +162,6 @@ namespace DM_Service.Models
         private TimeSpan afternoonStart;
         private TimeSpan afternoonName;
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public static event PropertyChangedEventHandler PropertyChangedStatic;
 
         public Service()
@@ -230,11 +229,6 @@ namespace DM_Service.Models
 
         }
 
-        protected void Changed(string vlastnost)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(vlastnost));
-        }
         protected static void ChangedStatic(string vlastnost)
         {
             if (PropertyChangedStatic != null)

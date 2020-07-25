@@ -7,7 +7,7 @@ using Xamarin.Forms.Xaml.Internals;
 
 namespace DM_Service.Models
 {
-    public class Item:INotifyPropertyChanged
+    public class Item:PropertyChangedClass
     {
         private string name;
         public string Name
@@ -93,14 +93,6 @@ namespace DM_Service.Models
                 original = value;
                 Changed(nameof(Original));
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void Changed(string property)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
     }
 }

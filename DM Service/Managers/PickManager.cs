@@ -7,15 +7,13 @@ using System.Text;
 
 namespace DM_Service
 {
-    public class PickManager:INotifyPropertyChanged
+    public class PickManager:PropertyChangedClass
     {
         public PickManager()
         {
             TotalCount = 0;
             PalletCount = 0;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private int totalCount;
         public int TotalCount
@@ -82,12 +80,6 @@ namespace DM_Service
             {
                 throw new ArgumentNullException("pick does not exist");
             }
-        }
-
-        protected void Changed(string vlastnost)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(vlastnost));
         }
     }
 }
