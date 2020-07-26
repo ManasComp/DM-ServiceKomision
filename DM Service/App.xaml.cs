@@ -10,7 +10,7 @@ namespace DM_Service
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new Calculation();
         }
 
         protected override void OnStart()
