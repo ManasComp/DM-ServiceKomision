@@ -45,29 +45,15 @@ namespace DM_Service
 
         public void AddPick(Pick pick)
         {
-            Service.AddItem(new Item(pick));
             TotalCount += pick.CountPicksInList;
-            if (pick.CountPicksInList > 0)
-            {
-                PalletCount += 1;
-            }
-            else
-            {
-                
-            }
+            PalletCount += 1;
         }
 
-        //public void RemovePick(Pick pick)
-        //{
-        //    if (Service.MainList[Service.MainList.Count - 1].Contains(new Item(pick)))
-        //    {
-        //        Service.Remove(new Item(pick));
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentNullException("pick does not exist");
-        //    }
-        //}
+        public void RemovePick(Pick pick)
+        {
+            PalletCount -= 1;
+            TotalCount -= pick.CountPicksInList;
+        }
 
         public void EditPick(Pick OldPick, Pick NewPick)
         {

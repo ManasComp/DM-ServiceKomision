@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace DM_Service
 {
@@ -41,7 +42,7 @@ namespace DM_Service
         {
             if (!string.IsNullOrEmpty(Input_Entry.Text))
             {
-                service.PickManager.AddPick(new Pick(int.Parse(Input_Entry.Text)));
+                service.AddItem(new Item(new Pick(int.Parse(Input_Entry.Text))));
                 Input_Entry.Text = "";
                 Progress_ProgressBar.Progress = ((double)service.PickManager.TotalCount / (double)service.Norm);
             }
@@ -76,8 +77,7 @@ namespace DM_Service
 
         private void Delete_MenuItem_Clicked(object sender, EventArgs e)
         {
-            System.Diagnostics.Trace.WriteLine(sender);
-            Service.Remove((sender as MenuItem).CommandParameter as Item);
+            service.Remove((sender as MenuItem).CommandParameter as Item);
         }
 
         private void Edit_MenuItem_Clicked(object sender, EventArgs e)
@@ -101,22 +101,40 @@ namespace DM_Service
 
         private void AddPause_Butoon_Pressed(object sender, EventArgs e)
         {
+            isPressed = true;
             if (pressed == true)
             {
                 AddPausePressedStart = DateTime.Now;
                 System.Diagnostics.Trace.WriteLine("pressed");
-            }       
+                Task.Run(PressingAsync);
+            }
+        }
+
+        private int seconds = 1;
+        private bool isPressed = true;
+
+        private async void PressingAsync()
+        {
+            while (isPressed)
+            {
+                if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds)) < DateTime.Now)
+                {
+                    Vibration.Vibrate();//přidaat na dobrý místo
+                    isPressed = false;
+                }
+            }
         }
 
         private bool pressed = true;
         private bool pause = true;
         private void AddPause_Butoon_Released(object sender, EventArgs e)
         {
+            isPressed = false;
             if (pressed == true)
             {
                 Picks_StackLayout.IsVisible = false;
                 PauseStart_Grid.IsVisible = true;
-                if ((AddPausePressedStart + TimeSpan.FromMilliseconds(500)) > DateTime.Now)
+                if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds-0.1)) > DateTime.Now)
                 {
                     AddPause_Butoon.Text = "Stop Pause";
                     pause = true;
@@ -143,13 +161,13 @@ namespace DM_Service
                     }
                     else
                     {
-                        service.PauseManager.AddPause(new Pause(AddPausePressedStart, DateTime.Now));
+                        service.AddItem((new Item(new Pause(AddPausePressedStart, DateTime.Now))));
                     }
                 }
                 else
-                {
-                    DisplayAlert("pressed", "pressed", "ok");
-                    Service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));                    
+                {                    
+                    //DisplayAlert("pressed", "pressed", "ok");
+                    service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));                    
                 }
                 pressed = true;
             }

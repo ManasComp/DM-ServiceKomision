@@ -76,20 +76,83 @@ namespace DM_Service.Models
             }
         }
 
-        public static void AddItem(Item item)
+        public void AddItem(Item item)
         {
             if ((MainList.Count > 0) && (MainList[MainList.Count - 1].Count > 0) && (MainList[MainList.Count - 1][MainList[MainList.Count - 1].Count - 1].Added.Date == DateTime.Today.Date))
             {
-                MainList[MainList.Count - 1].Insert(0, item);
-                MainList[MainList.Count - 1].UpDate();                   
+                if (Check(item, true))
+                {
+                    MainList[MainList.Count - 1].Insert(0, item);
+                    MainList[MainList.Count - 1].UpDate();
+                }
             }
 
             else
             {
-                ItemGroup itemGroup = new ItemGroup();
-                itemGroup.Insert(0, item);
-                itemGroup.UpDate();
-                MainList.Add(itemGroup);
+                if  (Check(item, true))
+                {
+                    ItemGroup itemGroup = new ItemGroup();
+                    itemGroup.Insert(0, item);
+                    itemGroup.UpDate();
+                    MainList.Add(itemGroup);
+                }
+            }
+        }
+
+        private bool Check(Item item, bool add)
+        {
+            if (item.Original is Pick)
+            {
+                Pick pick = item.Original as Pick;
+                if (add)
+                {
+                    if (pick.CountPicksInList > 0)
+                    {
+                        pickManager.AddPick(pick);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    pickManager.RemovePick(pick);
+                    return true;
+                }
+            }
+            else if (item.Original is Pause)
+            {
+                Pause pause = (item.Original as Pause);
+                if (add)
+                {
+                    pauseManager.AddPause(pause);
+                    return true;
+                }
+                else
+                {
+                    pauseManager.RemovePause(pause);
+                    return true;
+                }
+            }
+            else if (item.Original is WorkShutDown)
+            {
+                WorkShutDown workShutDown = item.Original as WorkShutDown;
+                if (add)
+                {
+                    pickManager.AddPick(new Pick(workShutDown.ShouldHavePicks));
+                    return true;
+                }
+                else
+                {
+                    pickManager.RemovePick(new Pick(workShutDown.ShouldHavePicks));
+                    return true;
+                }
+            }
+            else
+            {
+                throw new Exception("bad item");
             }
         }
 
@@ -199,14 +262,17 @@ namespace DM_Service.Models
             }
         }
 
-        public static void Remove(Item item)
+        public void Remove(Item item)
         {
             if (MainList[MainList.Count - 1].Contains(item))
             {
-                MainList[MainList.Count - 1].Remove(item);
-                if (MainList[MainList.Count - 1].Count == 0)
+                if (Check(item, false))
                 {
-                    MainList.Remove(MainList[MainList.Count - 1]);
+                    MainList[MainList.Count - 1].Remove(item);
+                    if (MainList[MainList.Count - 1].Count == 0)
+                    {
+                        MainList.Remove(MainList[MainList.Count - 1]);
+                    }
                 }
             }
             else

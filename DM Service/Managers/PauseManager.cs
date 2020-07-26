@@ -47,23 +47,15 @@ namespace DM_Service
 
         public void AddPause(Pause pause)
         {
-            Service.AddItem(new Item(pause));
             Duration += pause.PauseDuration;
             PausesCount += 1;
         }
 
-        //public void RemovePause(Pause pause)
-        //{
-        //    if (Service.MainList[Service.MainList.Count - 1].Contains(new Item(pause)))
-        //    {
-        //        Service.Remove(new Item(pause));
-        //        PausesCount -= 1;
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentNullException("pause does not exist");
-        //    }
-        //}
+        public void RemovePause(Pause pause)
+        {
+            PausesCount -= 1;
+            Duration -= pause.PauseDuration;
+        }
 
         public void EditPause(Pause OldPause, Pause NewPaus)
         {

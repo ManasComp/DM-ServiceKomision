@@ -10,7 +10,6 @@ namespace DM_Service.Models
         public WorkShutDown(DateTime startPause, DateTime endPause, Service service) : base(startPause, endPause)
         {
             Service = service;
-            //Service.MainList[0].Insert(0, new Item(this));
         }
 
         public int ShouldHavePicks
