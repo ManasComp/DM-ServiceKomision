@@ -91,12 +91,13 @@ namespace DM_Service.Models
             {
                 if  (Check(item, true))
                 {
-                    ItemGroup itemGroup = new ItemGroup();
+                    ItemGroup itemGroup = new ItemGroup(ShiftName);
                     itemGroup.Insert(0, item);
                     itemGroup.UpDate();
                     MainList.Add(itemGroup);
                 }
             }
+            MainList[MainList.Count - 1].UpDate();
         }
 
         private bool Check(Item item, bool add)
@@ -265,6 +266,7 @@ namespace DM_Service.Models
             {
                 MainList[MainList.Count - 1][MainList[MainList.Count - 1].IndexOf(oldItem)] = newItem;
             }
+            MainList[MainList.Count - 1].UpDate();
         }
 
         public void Remove(Item item)
@@ -284,6 +286,7 @@ namespace DM_Service.Models
             {
                 throw new ArgumentNullException("item does not exist");
             }
+            MainList[MainList.Count - 1].UpDate();
         }
 
         private void ShiftAllocation()
@@ -306,7 +309,7 @@ namespace DM_Service.Models
                 ShiftStart = TimeSpan.Zero;
                 ShiftEnd = TimeSpan.Zero;
                 norm = 0;
-                ShiftName = "Free day";
+                ShiftName = "Free";
             }//testov8n9
             //if (DateTime.Now.DayOfWeek = DayOfWeek.Saturday|| DateTime.Now.DayOfWeek = DayOfWeek.Sunday)
             //{

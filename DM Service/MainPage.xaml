@@ -7,9 +7,17 @@
              BackgroundColor="LightBlue">
     <RefreshView x:Name="Refresh_RefreshView">
         <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Start" Padding="20">
-            <StackLayout Orientation="Horizontal">
-                <Label Text="DM Service Mobile App" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="Blue" FontAttributes="Bold" FontSize="Large"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Spacing="20">
                 <Image Source="https://www.obchodnidumzlin.cz/images/obchodnidumzlin.cz/uploader/files/loga/DM_logo.png" HeightRequest="50" WidthRequest="50"/>
+                <Label Text="DM Service" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="Blue" FontAttributes="Bold" FontSize="Large"/>
+                <Label FontSize="Caption" VerticalOptions="Center">
+                    <Label.FormattedText VerticalOptions="Center">
+                        <FormattedString>
+                            <Span Text="Shift: "/>
+                            <Span Text="{Binding ShiftName}" FontAttributes="Bold"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                 <AbsoluteLayout>
@@ -85,7 +93,39 @@
 
             </Grid>
             <ScrollView >
-                <ListView x:Name="List_listView" ItemsSource = "{Binding MainList}" IsGroupingEnabled="True" GroupDisplayBinding="{Binding Name}" ItemSelected="List_listView_ItemSelected">
+                <ListView x:Name="List_listView" ItemsSource = "{Binding MainList}" IsGroupingEnabled="True" ItemSelected="List_listView_ItemSelected">
+                    <!--<ListView.Header>
+                        <StackLayout Orientation="Horizontal">ž
+                            <Label Text="Name" HorizontalOptions="StartAndExpand"/>
+                            <Label Text="Time" HorizontalOptions="Center"/>
+                            <Label Text="Specification" HorizontalOptions="EndAndExpand"/>
+                        </StackLayout>
+                    </ListView.Header>-->
+                    <ListView.GroupHeaderTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                    <Label FontSize="Caption" VerticalOptions="Center" HorizontalOptions="StartAndExpand">
+                                        <Label.FormattedText VerticalOptions="Center">
+                                            <FormattedString>
+                                                <Span Text="Shift: "/>
+                                                <Span Text="{Binding ShiftName}" FontAttributes="Bold"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label FontAttributes="Bold" Text="{Binding Name}" HorizontalOptions="Center"/>
+                                    <Label HorizontalOptions="EndAndExpand">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Picks: "/>
+                                                <Span Text="{Binding PiksInDay}" FontAttributes="Bold" TextColor="{Binding PicksColor}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.GroupHeaderTemplate>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
