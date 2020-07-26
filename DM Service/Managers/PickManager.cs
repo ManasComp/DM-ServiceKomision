@@ -43,15 +43,21 @@ namespace DM_Service
             }
         }
 
-        public void AddPick(Pick pick)
+        public void AddPick(Pick pick, bool add = true)
         {
             TotalCount += pick.CountPicksInList;
-            PalletCount += 1;
+            if (add)
+            {
+                PalletCount += 1;
+            }
         }
 
-        public void RemovePick(Pick pick)
+        public void RemovePick(Pick pick, bool remove = true)
         {
-            PalletCount -= 1;
+            if (remove)
+            {
+                PalletCount -= 1;
+            }
             TotalCount -= pick.CountPicksInList;
         }
 

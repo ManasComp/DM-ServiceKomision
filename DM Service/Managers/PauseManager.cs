@@ -28,7 +28,7 @@ namespace DM_Service
         {
             Duration = TimeSpan.Zero;
             MaximumPauses = 2;
-            PausesCount =   0;
+            PausesCount = 0;
         }
 
         private int pausesCount;
@@ -38,7 +38,7 @@ namespace DM_Service
             {
                 return pausesCount;
             }
-            set
+            private set
             {
                 pausesCount = value;
                 Changed(nameof(PausesCount));

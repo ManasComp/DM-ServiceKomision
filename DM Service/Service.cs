@@ -122,6 +122,20 @@ namespace DM_Service.Models
                     return true;
                 }
             }
+            else if (item.Original is WorkShutDown)
+            {
+                WorkShutDown workShutDown = item.Original as WorkShutDown;
+                if (add)
+                {
+                    pickManager.AddPick(new Pick(workShutDown.ShouldHavePicks), false);
+                    return true;
+                }
+                else
+                {
+                    pickManager.RemovePick(new Pick(workShutDown.ShouldHavePicks), false);
+                    return true;
+                }
+            }
             else if (item.Original is Pause)
             {
                 Pause pause = (item.Original as Pause);
@@ -133,20 +147,6 @@ namespace DM_Service.Models
                 else
                 {
                     pauseManager.RemovePause(pause);
-                    return true;
-                }
-            }
-            else if (item.Original is WorkShutDown)
-            {
-                WorkShutDown workShutDown = item.Original as WorkShutDown;
-                if (add)
-                {
-                    pickManager.AddPick(new Pick(workShutDown.ShouldHavePicks));
-                    return true;
-                }
-                else
-                {
-                    pickManager.RemovePick(new Pick(workShutDown.ShouldHavePicks));
                     return true;
                 }
             }
@@ -198,21 +198,26 @@ namespace DM_Service.Models
         }
 
         public TimeSpan MaxPause { get; private set; }
-
+        public bool isPause { get; set; } = false;
+        private int shoudlHavePicks;
         public int ShouldHavePicks
         {
             get
             {
-                TimeSpan freeTime;
-                if (PauseManager.PausesCount >= PauseManager.MaximumPauses)
+                if (!isPause)
                 {
-                    freeTime = MaxPause;
+                    TimeSpan freeTime;
+                    if (PauseManager.PausesCount >= PauseManager.MaximumPauses)
+                    {
+                        freeTime = MaxPause;
+                    }
+                    else
+                    {
+                        freeTime = PauseManager.Duration;
+                    }
+                    shoudlHavePicks = (int)Math.Round(((Norm / (ShiftDuration - freeTime).TotalSeconds) * -(PauseManager.Duration + TimeRemaining - ShiftDuration).TotalSeconds), 0);
                 }
-                else
-                {
-                    freeTime = PauseManager.Duration;
-                }
-                return (int)Math.Round(((Norm / (ShiftDuration - freeTime).TotalSeconds) * -(PauseManager.Duration + TimeRemaining - ShiftDuration).TotalSeconds), 0);
+                return shoudlHavePicks;
             }
         }
 

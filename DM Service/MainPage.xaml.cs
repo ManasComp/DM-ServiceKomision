@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using System.Diagnostics;
 
 namespace DM_Service
 {
@@ -107,6 +108,7 @@ namespace DM_Service
                 AddPausePressedStart = DateTime.Now;
                 System.Diagnostics.Trace.WriteLine("pressed");
                 Task.Run(PressingAsync);
+                pressed = false;
             }
         }
 
@@ -115,11 +117,14 @@ namespace DM_Service
 
         private async void PressingAsync()
         {
+            Trace.WriteLine("metod");
             while (isPressed)
             {
+                Trace.WriteLine("loop");
                 if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds)) < DateTime.Now)
                 {
-                    Vibration.Vibrate();//přidaat na dobrý místo
+                    Trace.WriteLine("vibrate");
+                    Vibration.Vibrate();//funguje i při refresh
                     isPressed = false;
                 }
             }
@@ -130,23 +135,31 @@ namespace DM_Service
         private void AddPause_Butoon_Released(object sender, EventArgs e)
         {
             isPressed = false;
-            if (pressed == true)
+            if (service.isPause == false)
             {
-                Picks_StackLayout.IsVisible = false;
-                PauseStart_Grid.IsVisible = true;
-                if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds-0.1)) > DateTime.Now)
+                if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds - 0.1)) > DateTime.Now)
                 {
-                    AddPause_Butoon.Text = "Stop Pause";
-                    pause = true;
+                    if (service.PauseManager.PausesCount >= service.PauseManager.MaximumPauses)
+                    {
+                        DisplayAlert("Error", "Too much pauses", "ok");
+                        return;
+                    }
+                    else
+                    {
+                        AddPause_Butoon.Text = "Stop Pause";
+                        pause = true;
+                    }
                 }
                 else
                 {
                     AddPause_Butoon.Text = "Stop ShutDown";
                     pause = false;
                 }
+                service.isPause = true;
+                Picks_StackLayout.IsVisible = false;
+                PauseStart_Grid.IsVisible = true;
                 PauseStart_Label.Text = AddPausePressedStart.ToShortTimeString();
                 PauseLasts_Label.Text = string.Format("{0}:{1}", AddPausePressedStart.Minute, AddPausePressedStart.Second);
-                pressed = false;
             }
             else
             {
@@ -155,20 +168,13 @@ namespace DM_Service
                 AddPause_Butoon.Text = "Add Pause";
                 if (pause)
                 {
-                    if (service.PauseManager.PausesCount >= service.PauseManager.MaximumPauses)
-                    {
-                        DisplayAlert("Error", "Too much pauses", "ok");
-                    }
-                    else
-                    {
-                        service.AddItem((new Item(new Pause(AddPausePressedStart, DateTime.Now))));
-                    }
+                    service.AddItem((new Item(new Pause(AddPausePressedStart, DateTime.Now))));
                 }
                 else
-                {                    
-                    //DisplayAlert("pressed", "pressed", "ok");
-                    service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));                    
+                {
+                    service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));
                 }
+                service.isPause = false;
                 pressed = true;
             }
             refresh();
