@@ -43,6 +43,7 @@ namespace DM_Service
 
         private void Add_Butoon_Clicked(object sender, EventArgs e)
         {
+            Trace.WriteLine("pressed");
             if (!string.IsNullOrEmpty(Input_Entry.Text))
             {
                 service.AddItem(new Item(new Pick(int.Parse(Input_Entry.Text))));
@@ -50,6 +51,15 @@ namespace DM_Service
                 Progress_ProgressBar.Progress = ((double)service.PickManager.TotalCount / (double)service.Norm);
             }
             refresh();
+            foreach (ItemGroup itemGroup in Service.MainList)
+            {
+                Trace.WriteLine(itemGroup);
+                foreach (Item item in itemGroup)
+                {
+                    Trace.WriteLine(item);
+                }
+            }
+            Trace.WriteLine("unpressed");
         }
 
         private void refresh()
@@ -61,10 +71,11 @@ namespace DM_Service
                 AddPause_Butoon.IsEnabled = true;
             }
 
-            if (service.ShiftName == "Free day")
+            if (service.ShiftName == "Free")
             {
-                Add_Butoon.IsEnabled = false;
-                AddPause_Butoon.IsEnabled = false;
+                //Add_Butoon.IsEnabled = false;
+                //AddPause_Butoon.IsEnabled = false;
+                Trace.WriteLine("odkomentuj mě");
             }
 
             else

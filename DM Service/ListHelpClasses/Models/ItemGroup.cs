@@ -40,8 +40,8 @@ namespace DM_Service.Models
                 {
                     piks += (item.Original as Pick).CountPicksInList;
                 }
-                Service service = new Service();
-                if (piks >= service.Norm)
+                //Service service = new Service();
+                if (piks >= 630)
                 {
                     PicksColor = Color.Green;
                 }

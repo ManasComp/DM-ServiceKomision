@@ -84,19 +84,27 @@ namespace DM_Service.Models
                 {
                     MainList[MainList.Count - 1].Insert(0, item);
                     MainList[MainList.Count - 1].UpDate();
+                    System.Diagnostics.Trace.WriteLine("Item added");
+                    System.Diagnostics.Trace.WriteLine(item);
                 }
             }
 
             else
             {
-                if  (Check(item, true))
+                if (Check(item, true))
                 {
                     ItemGroup itemGroup = new ItemGroup(ShiftName);
                     itemGroup.Insert(0, item);
                     itemGroup.UpDate();
                     MainList.Add(itemGroup);
+                    System.Diagnostics.Trace.WriteLine("ItemGroup added");
+                    System.Diagnostics.Trace.WriteLine("Item added");
+                    System.Diagnostics.Trace.WriteLine(itemGroup);
+                    System.Diagnostics.Trace.WriteLine(item);
                 }
             }
+            System.Diagnostics.Trace.WriteLine(String.Format("{0}{1}","Mainlist count: ", MainList.Count));
+            System.Diagnostics.Trace.WriteLine(String.Format("{0}{1}", "Mainlist inside count: ", MainList[0].Count));
             MainList[MainList.Count - 1].UpDate();
         }
 
@@ -286,7 +294,10 @@ namespace DM_Service.Models
             {
                 throw new ArgumentNullException("item does not exist");
             }
-            MainList[MainList.Count - 1].UpDate();
+            if (MainList.Count > 0)
+            {
+                MainList[MainList.Count - 1].UpDate();
+            }
         }
 
         private void ShiftAllocation()
@@ -310,15 +321,15 @@ namespace DM_Service.Models
                 ShiftEnd = TimeSpan.Zero;
                 norm = 0;
                 ShiftName = "Free";
-            }//uncomment
-            //if (DateTime.Now.DayOfWeek = DayOfWeek.Saturday|| DateTime.Now.DayOfWeek = DayOfWeek.Sunday)
-            //{
-            //    ShiftDuration = TimeSpan.Zero;
-            //    ShiftStart = TimeSpan.Zero;
-            //    ShiftEnd = TimeSpan.Zero;
-            //    norm = 0;
-            //    ShiftName = "Weekend";
-            //}
+            }
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
+            {
+                ShiftDuration = TimeSpan.Zero;
+                ShiftStart = TimeSpan.Zero;
+                ShiftEnd = TimeSpan.Zero;
+                norm = 0;
+                ShiftName = "Weekend";
+            }
             ShiftDuration = ShiftEnd - ShiftStart;
 
         }
