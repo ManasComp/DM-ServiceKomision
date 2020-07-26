@@ -11,8 +11,6 @@ using System.Diagnostics;
 
 namespace DM_Service
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
@@ -36,6 +34,10 @@ namespace DM_Service
             BindingContext = service;
             List_listView.ItemsSource = Service.MainList;
             Refresh_RefreshView.Command = RefreshViewCommand;
+            seconds = 1;
+            isPressed = true;
+            pressed = true;
+            pause = true;
             refresh();
         }
 
@@ -83,14 +85,14 @@ namespace DM_Service
 
         private void Edit_MenuItem_Clicked(object sender, EventArgs e)
         {
-
+            //add edit function
         }
 
-        public event PropertyChangedEventHandler PropertyChanged2;
+        public event PropertyChangedEventHandler PropertyChanged1;
         protected void Changed(string property)
         {
-            if (PropertyChanged2 != null)
-                PropertyChanged2(this, new PropertyChangedEventArgs(property));
+            if (PropertyChanged1 != null)
+                PropertyChanged1(this, new PropertyChangedEventArgs(property));
         }
 
         private void List_listView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -106,32 +108,28 @@ namespace DM_Service
             if (pressed == true)
             {
                 AddPausePressedStart = DateTime.Now;
-                System.Diagnostics.Trace.WriteLine("pressed");
                 Task.Run(PressingAsync);
                 pressed = false;
             }
         }
 
-        private int seconds = 1;
-        private bool isPressed = true;
+        private int seconds;
+        private bool isPressed;
 
         private async void PressingAsync()
         {
-            Trace.WriteLine("metod");
             while (isPressed)
             {
-                Trace.WriteLine("loop");
                 if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds)) < DateTime.Now)
                 {
-                    Trace.WriteLine("vibrate");
-                    Vibration.Vibrate();//funguje i při refresh
+                    Vibration.Vibrate();
                     isPressed = false;
                 }
             }
         }
 
-        private bool pressed = true;
-        private bool pause = true;
+        private bool pressed;
+        private bool pause;
         private void AddPause_Butoon_Released(object sender, EventArgs e)
         {
             isPressed = false;

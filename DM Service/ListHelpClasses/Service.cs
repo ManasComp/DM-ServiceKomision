@@ -310,7 +310,7 @@ namespace DM_Service.Models
                 ShiftEnd = TimeSpan.Zero;
                 norm = 0;
                 ShiftName = "Free";
-            }//testov8n9
+            }//uncomment
             //if (DateTime.Now.DayOfWeek = DayOfWeek.Saturday|| DateTime.Now.DayOfWeek = DayOfWeek.Sunday)
             //{
             //    ShiftDuration = TimeSpan.Zero;

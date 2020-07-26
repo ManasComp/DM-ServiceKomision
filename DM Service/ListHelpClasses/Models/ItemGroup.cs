@@ -28,6 +28,7 @@ namespace DM_Service.Models
         {
             ShiftName = shiftName;
             this.CollectionChanged += Check;
+            piksInDay = 0;
         }
 
         public void Check(object sender, NotifyCollectionChangedEventArgs e)
@@ -39,8 +40,8 @@ namespace DM_Service.Models
                 {
                     piks += (item.Original as Pick).CountPicksInList;
                 }
-                Trace.WriteLine("smyčka");
-                if (piks >= 630)
+                Service service = new Service();
+                if (piks >= service.Norm)
                 {
                     PicksColor = Color.Green;
                 }
@@ -68,7 +69,7 @@ namespace DM_Service.Models
             }
         }
 
-        private int piksInDay=0;
+        private int piksInDay;
         public int PiksInDay
         {
             get

@@ -98,13 +98,6 @@
             </Grid>
             <ScrollView >
                 <ListView x:Name="List_listView" ItemsSource = "{Binding MainList}" IsGroupingEnabled="True" ItemSelected="List_listView_ItemSelected">
-                    <!--<ListView.Header>
-                        <StackLayout Orientation="Horizontal">ž
-                            <Label Text="Name" HorizontalOptions="StartAndExpand"/>
-                            <Label Text="Time" HorizontalOptions="Center"/>
-                            <Label Text="Specification" HorizontalOptions="EndAndExpand"/>
-                        </StackLayout>
-                    </ListView.Header>-->
                     <ListView.GroupHeaderTemplate>
                         <DataTemplate>
                             <ViewCell>

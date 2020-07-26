@@ -17,21 +17,21 @@ namespace DM_Service
             InitializeComponent();
         }
 
-        Operation operation;
+        private Operation operation;
 
-        List<string> previousText = new List<string>();
+        private List<string> previousText = new List<string>();
 
-        bool validity = false;
+        private bool validity = false;
 
         private void Button_Clicked(object sender, EventArgs e)
         {
             {
                 string objStr = ((Button)sender).Text.ToString();
 
-                if (objStr == (string)RovnaSe_Button.Text)
+                if (objStr == (string)Equal_Button.Text)
                 {
-                    operation = new Operation(Displej_TextBox.Text);
-                    Displej_TextBox.Text = operation.Result.ToString();
+                    operation = new Operation(Display_Label.Text);
+                    Display_Label.Text = operation.Result.ToString();
                     BindingContext = operation;
                     validity = true;
                 }
@@ -40,7 +40,7 @@ namespace DM_Service
                 {
                     if (previousText.Count() > 0)
                     {
-                        Displej_TextBox.Text = previousText[previousText.Count() - 1];
+                        Display_Label.Text = previousText[previousText.Count() - 1];
                         previousText.RemoveAt(previousText.Count() - 1);
                         if (validity == true)
                         {
@@ -52,7 +52,7 @@ namespace DM_Service
 
                 else if ((objStr == (string)C_Button.Text))
                 {
-                    Displej_TextBox.Text = "0";
+                    Display_Label.Text = "0";
                     previousText = new List<string>();
                     if (validity == true)
                     {
@@ -63,12 +63,12 @@ namespace DM_Service
 
                 else
                 {
-                    previousText.Add(Displej_TextBox.Text);
-                    if (Displej_TextBox.Text == "0")
+                    previousText.Add(Display_Label.Text);
+                    if (Display_Label.Text == "0")
                     {
-                        Displej_TextBox.Text = "";
+                        Display_Label.Text = "";
                     }
-                    Displej_TextBox.Text += objStr;
+                    Display_Label.Text += objStr;
                 }
             }
         }

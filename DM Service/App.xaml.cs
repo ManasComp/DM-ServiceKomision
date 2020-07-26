@@ -9,8 +9,7 @@ namespace DM_Service
         public App()
         {
             InitializeComponent();
-
-            MainPage = new Calculation();
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
