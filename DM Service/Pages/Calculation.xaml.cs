@@ -17,11 +17,11 @@ namespace DM_Service
             InitializeComponent();
         }
 
-        Operace operace;
+        Operation operation;
 
         List<string> previousText = new List<string>();
 
-        bool overeni = false;
+        bool validity = false;
 
         private void Button_Clicked(object sender, EventArgs e)
         {
@@ -30,10 +30,10 @@ namespace DM_Service
 
                 if (objStr == (string)RovnaSe_Button.Text)
                 {
-                    operace = new Operace(Displej_TextBox.Text);
-                    Displej_TextBox.Text = operace.Vysledek.ToString();
-                    BindingContext = operace;
-                    overeni = true;
+                    operation = new Operation(Displej_TextBox.Text);
+                    Displej_TextBox.Text = operation.Result.ToString();
+                    BindingContext = operation;
+                    validity = true;
                 }
 
                 else if ((objStr == (string)CE_Button.Text))
@@ -42,10 +42,10 @@ namespace DM_Service
                     {
                         Displej_TextBox.Text = previousText[previousText.Count() - 1];
                         previousText.RemoveAt(previousText.Count() - 1);
-                        if (overeni == true)
+                        if (validity == true)
                         {
-                            operace.Ulozeni = "";
-                            overeni = false;
+                            operation.Save = "";
+                            validity = false;
                         }
                     }
                 }
@@ -54,10 +54,10 @@ namespace DM_Service
                 {
                     Displej_TextBox.Text = "0";
                     previousText = new List<string>();
-                    if (overeni == true)
+                    if (validity == true)
                     {
-                        operace.Ulozeni = "";
-                        overeni = false;
+                        operation.Save = "";
+                        validity = false;
                     }
                 }
 
