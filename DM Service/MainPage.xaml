@@ -8,10 +8,10 @@
              BackgroundColor="LightBlue">
     <RefreshView x:Name="Refresh_RefreshView">
         <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Start" Padding="20">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Spacing="20">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Spacing="20" VerticalOptions="Center">
                 <AbsoluteLayout HeightRequest="50" WidthRequest="50">
-                    <ActivityIndicator IsRunning="{Binding Source={x:Reference image}, Path=IsLoading}" Color="White"/>
-                    <Image Source="{local:EmbeddedImage ResourceId=DM_logo.png}" x:Name="image"/>
+                    <ActivityIndicator IsRunning="{Binding Source={x:Reference image}, Path=IsLoading}" Color="White" VerticalOptions="Center"/>
+                    <Image Source="{local:EmbeddedImage ResourceId=DM_logo.png}" x:Name="image" VerticalOptions="Center"/>
                 </AbsoluteLayout>
                 <Label Text="DM Service" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="Blue" FontAttributes="Bold" FontSize="Large"/>
                 <Label FontSize="Caption" VerticalOptions="Center">
