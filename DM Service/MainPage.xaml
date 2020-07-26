@@ -2,13 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:DM_Service.MarkupExtensions"
              mc:Ignorable="d"
              x:Class="DM_Service.MainPage"
              BackgroundColor="LightBlue">
     <RefreshView x:Name="Refresh_RefreshView">
         <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Start" Padding="20">
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Spacing="20">
-                <Image Source="https://www.obchodnidumzlin.cz/images/obchodnidumzlin.cz/uploader/files/loga/DM_logo.png" HeightRequest="50" WidthRequest="50"/>
+                <AbsoluteLayout HeightRequest="50" WidthRequest="50">
+                    <ActivityIndicator IsRunning="{Binding Source={x:Reference image}, Path=IsLoading}" Color="White"/>
+                    <Image Source="{local:EmbeddedImage ResourceId=DM_logo.png}" x:Name="image"/>
+                </AbsoluteLayout>
                 <Label Text="DM Service" HorizontalOptions="Start" VerticalOptions="CenterAndExpand" TextColor="Blue" FontAttributes="Bold" FontSize="Large"/>
                 <Label FontSize="Caption" VerticalOptions="Center">
                     <Label.FormattedText VerticalOptions="Center">
