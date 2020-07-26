@@ -135,7 +135,7 @@ namespace DM_Service
         private void AddPause_Butoon_Released(object sender, EventArgs e)
         {
             isPressed = false;
-            if (service.isPause == false)
+            if (service.IsPause == false)
             {
                 if ((AddPausePressedStart + TimeSpan.FromSeconds(seconds - 0.1)) > DateTime.Now)
                 {
@@ -155,7 +155,7 @@ namespace DM_Service
                     AddPause_Butoon.Text = "Stop ShutDown";
                     pause = false;
                 }
-                service.isPause = true;
+                service.IsPause = true;
                 Picks_StackLayout.IsVisible = false;
                 PauseStart_Grid.IsVisible = true;
                 PauseStart_Label.Text = AddPausePressedStart.ToShortTimeString();
@@ -174,7 +174,7 @@ namespace DM_Service
                 {
                     service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));
                 }
-                service.isPause = false;
+                service.IsPause = false;
                 pressed = true;
             }
             refresh();

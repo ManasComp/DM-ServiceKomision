@@ -198,13 +198,13 @@ namespace DM_Service.Models
         }
 
         public TimeSpan MaxPause { get; private set; }
-        public bool isPause { get; set; } = false;
+        public bool IsPause { get; set; } = false;
         private int shoudlHavePicks;
         public int ShouldHavePicks
         {
             get
             {
-                if (!isPause)
+                if (!IsPause)
                 {
                     TimeSpan freeTime;
                     if (PauseManager.PausesCount >= PauseManager.MaximumPauses)

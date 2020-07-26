@@ -17,10 +17,6 @@ namespace DM_Service.Models
                 CountPicksInList = countPicksInList;
                 PickListSave = DateTime.Now;
             }
-            //else
-            //{
-            //    throw new ArgumentNullException("wrong pick intialize");
-            //}
         }
     }
 }
