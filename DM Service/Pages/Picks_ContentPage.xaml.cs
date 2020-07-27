@@ -113,13 +113,13 @@ namespace DM_Service
 
         private DateTime AddPausePressedStart;
 
-        private void AddPause_Butoon_Pressed(object sender, EventArgs e)
+        private async void AddPause_Butoon_Pressed(object sender, EventArgs e)
         {
             isPressed = true;
             if (pressed == true)
             {
                 AddPausePressedStart = DateTime.Now;
-                Task.Run(PressingAsync);
+                await Task.Run(PressingAsync);
                 pressed = false;
             }
             pressed = true;
