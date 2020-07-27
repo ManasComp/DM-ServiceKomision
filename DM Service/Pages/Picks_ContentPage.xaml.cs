@@ -122,6 +122,7 @@ namespace DM_Service
                 Task.Run(PressingAsync);
                 pressed = false;
             }
+            pressed = true;
         }
 
         private int seconds;
@@ -184,7 +185,6 @@ namespace DM_Service
                     service.AddItem(new Item(new WorkShutDown(AddPausePressedStart, DateTime.Now, service)));
                 }
                 service.IsPause = false;
-                pressed = true;
             }
             refresh();
         }

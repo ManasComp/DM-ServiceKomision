@@ -9,7 +9,7 @@ namespace DM_Service
         public App()
         {
             InitializeComponent();
-            MainPage = new MainPage();
+            MainPage = new MainActivities_CarouselPage();
         }
 
         protected override void OnStart()

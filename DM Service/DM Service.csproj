@@ -25,7 +25,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Pages\Calculation.xaml">
+    <Compile Update="Pages\Calculation_ContentPage.xaml.cs">
+      <DependentUpon>Calculation_ContentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\Picks_ContentPage.xaml.cs">
+      <DependentUpon>Picks_ContentPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Pages\Calculation_ContentPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\MainActivities_CarouselPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
