@@ -10,11 +10,11 @@ using Xamarin.Forms.Xaml;
 namespace DM_Service
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class MainActivities_CarouselPage : CarouselPage
-{
-    public MainActivities_CarouselPage()
+    public partial class MainActivities_CarouselPage : CarouselPage
     {
-        InitializeComponent();
+        public MainActivities_CarouselPage()
+        {
+            InitializeComponent();
+        }
     }
-}
 }
